@@ -1,8 +1,7 @@
-from langchain_ollama import OllamaLLM 
 from langchain_qdrant import QdrantVectorStore
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnablePassthrough
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from langchain_google_genai import GoogleGenerativeAIEmbeddings, GoogleGenerativeAI
 from langchain_qdrant import QdrantVectorStore
 from qdrant_client import QdrantClient
 from dotenv import load_dotenv
@@ -19,7 +18,7 @@ OLLAMA_HOST = "http://localhost:11434"
 QDRANT_COLLECTION = "rag_docs"
 
 embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-llm = OllamaLLM(model="gemma3:1b", temperature=0.2, base_url=OLLAMA_HOST)
+llm = GoogleGenerativeAI(model="gemini-2.5-flash")
 client = QdrantClient(host="localhost", port=6333)
 
 vector_store = QdrantVectorStore(
@@ -91,7 +90,7 @@ def query_document(question: str):
         optimized_query_response = intention_chain.invoke({"question": question})
         optimized_query = optimized_query_response.strip()
         
-        rag_response = retriever.invoke(f"{optimized_query}")
+        rag_response = retriever.invoke(optimized_query)
         doc_snippet = None
         if rag_response:
             doc_ordered = reorder_retrieved_chunks(rag_response)
@@ -109,4 +108,5 @@ def query_document(question: str):
         return final_answer
         
     except Exception as e:
+        print(e)
         return "Desculpe, não foi possível processar sua solicitação."

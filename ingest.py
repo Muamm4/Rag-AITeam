@@ -1,6 +1,5 @@
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_ollama import OllamaLLM
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from langchain_google_genai import GoogleGenerativeAIEmbeddings, GoogleGenerativeAI
 from langchain_qdrant import QdrantVectorStore
 from qdrant_client import QdrantClient
 from langchain_core.prompts import PromptTemplate
@@ -21,7 +20,7 @@ client = QdrantClient(host="localhost", port=6333)
 
 embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 
-llm = OllamaLLM(model="gemma3:1b", temperature=0.2, base_url=OLLAMA_HOST)
+llm = GoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.2)
 
 metadata_prompt = PromptTemplate(
     template="""Para o seguinte trecho de texto, extraia um resumo conciso e palavras-chave relevantes.

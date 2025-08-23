@@ -8,5 +8,4 @@ langchain-google-genai
 qdrant-client
 pydantic
 python-dotenv
-sentence-transformers
 python-multipart
